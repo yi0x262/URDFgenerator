@@ -214,7 +214,7 @@ class genURDF(object):
         sub(plugin,'robotNamespace').text = robotname
         sub(plugin,'robotSimType').text = 'gazebo_ros_control/DefaultRobotHWSim'
         return gazebo
-    def print_urdf(self,robotname):
+    def __str__(self):
         xmldec = '<?xml version="1.0"?>\n'
         urdf = et.tostring(self.robot,pretty_print=True,xml_declaration=False).decode('utf-8').replace('_colon_',':')
         return xmldec + urdf
