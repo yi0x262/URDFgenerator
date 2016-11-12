@@ -5,7 +5,6 @@ class genYAML(object):
     def __init__(self,robotname):
         self.joints = {}
         self.yaml = {robotname:self.joints}
-        self.controllers = str()    #for genLAUNCH
 
     def output(self):
         return yaml.dump(self.yaml,default_flow_style=False)
@@ -16,7 +15,7 @@ class genYAML(object):
         info.update({'publish_rate':publist_rate})
         jsc = {'joint_state_controller':info}
         self.joints.update(jsc)
-        self.controllers += ' joint_state_controller'
+        return controller_name
 
     def revolute_joint_controller(self,jointname,pid={'p':1,'i':0,'d':0}):
         #must : use jointtype argument
@@ -27,7 +26,7 @@ class genYAML(object):
         info.update({'pid':pid})#wanna this line flow_style...
         rjc = {controller_name:info}
         self.joints.update(rjc)
-        self.controllers += ' '+controller_name
+        return controller_name
 
 
 if __name__ == '__main__':

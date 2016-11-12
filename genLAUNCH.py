@@ -1,4 +1,7 @@
 #!/usr/env/bin python3
+
+#.launch file reference:https://sites.google.com/site/robotlabo/time-tracker/ros/gazebo_mani
+
 from collections import OrderedDict
 
 import lxml.etree as et
@@ -22,25 +25,31 @@ class genLAUNCH(object):
         for i,j in args.items():
             od[i]   = j         #additional arguments
 
-        sub(self.launch,'node',od)#add launch file
+        return element('node',od)#add launch file
 
     def controller_spawner(self,robotname,args):
-        #self.node('controller_spawner','gazebo_ros',''{'args':args}
-        pass
+        self.launch.append(self.node('controller_spawner','controller_manager','spawner',respawn='false',output='screen',ns='/'+robotname,args=args))
 
-    def robot_state_publisher(self):
-        self.node('robot_state_publisher','robot_state_publisher','state_publisher')
 
     def spawn_urdf(self,robotname,urdfpath):
-        self.node('spawn_urdf','gazebo_ros','spawn_model',args='-file {} -urdf -model {}'.format(urdfpath,robotname))
+        self.launch.append(self.node('spawn_urdf','gazebo_ros','spawn_model',args='-file {} -urdf -model {}'.format(urdfpath,robotname)))
 
     def world(self,**args):
         include = element('include',file='$(find gazebo_ros)/launch/empty_world.launch')
         for i,j in args.items():
             sub(include, 'arg', name=i, value=j)
         self.launch.append(include)
+    def robot_state_publisher(self,robotname):
+        node = self.node('robot_state_publisher','robot_state_publisher','state_publisher',respawn='false',output='screen')
+        od = OrderedDict()#Because element(and python's func) cannot take 'from'(like import,def and so on) as an argument.
+        od['from']  = '/joint_states'
+        od['to']    = '/'+robotname+'/joint_states'
+        node.append(element('remap',od))
+        self.launch.append(node)
 
 if __name__ == '__main__':
+    robotname='ROBO'
+
     c = genLAUNCH()
     c.world(                                    #http//:
             #world_name  = '',                  #
@@ -50,6 +59,7 @@ if __name__ == '__main__':
             headless    = 'false',              #
             debug       = 'false'               #
             )
-    c.spawn_urdf('roboname','/home/yihome/')
-    #c.robot_state_publisher()
+    c.spawn_urdf(robotname,'/home/yihome/')
+    c.controller_spawner(robotname,'args args2 joint_state_controller')
+    c.robot_state_publisher(robotname)
     print(c)
