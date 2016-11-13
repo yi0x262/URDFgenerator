@@ -6,7 +6,7 @@ class genYAML(object):
         self.joints = {}
         self.yaml = {robotname:self.joints}
 
-    def output(self):
+    def __str__(self):
         return yaml.dump(self.yaml,default_flow_style=False)
 
     def joint_state_controller(self,publist_rate):
@@ -15,7 +15,7 @@ class genYAML(object):
         info.update({'publish_rate':publist_rate})
         jsc = {'joint_state_controller':info}
         self.joints.update(jsc)
-        return controller_name
+        return 'joint_state_controller'
 
     def revolute_joint_controller(self,jointname,pid={'p':1,'i':0,'d':0}):
         #must : use jointtype argument

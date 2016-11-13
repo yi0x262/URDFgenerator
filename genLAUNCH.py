@@ -40,12 +40,17 @@ class genLAUNCH(object):
             sub(include, 'arg', name=i, value=j)
         self.launch.append(include)
     def robot_state_publisher(self,robotname):
-        node = self.node('robot_state_publisher','robot_state_publisher','state_publisher',respawn='false',output='screen')
+        sub(self.launch,'arg',name='model',default='$(find {})/urdf/{}.urdf'.format('test_gazebo',robotname))
+        sub(self.launch,'param',name='robot_description',textfile='$(arg model)')
+        sub(self.launch,'rosparam',file='$(find {})/config/{}.yaml'.format('test_gazebo',robotname),command='load')#very important
+
+        jsp = self.node('joint_state_publisher','joint_state_publisher','joint_state_publisher')
+        rsp = self.node('robot_state_publisher','robot_state_publisher','robot_state_publisher',respawn='false',output='screen')
         od = OrderedDict()#Because element(and python's func) cannot take 'from'(like import,def and so on) as an argument.
         od['from']  = '/joint_states'
         od['to']    = '/'+robotname+'/joint_states'
-        node.append(element('remap',od))
-        self.launch.append(node)
+        rsp.append(element('remap',od))
+        self.launch.append(rsp)
 
 if __name__ == '__main__':
     robotname='ROBO'
