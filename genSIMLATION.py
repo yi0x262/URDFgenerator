@@ -78,7 +78,7 @@ if __name__ == '__main__':
     path = '/home/yihome/catkin_ws/src/test_gazebo'
     gs = genSIMULATION(robotname,path)
     gs.link_box('link1',[0,0,1],[0,0,0],[1,1,1],10,'White')
-    gs.link_box('link2',[0,0,1.5],[0,0,0],[1,1,1],10,'Orange')#,sensor='imu')
+    gs.link_box('link2',[0,0,1.5],[0,0,0],[1,1,1],10,'Orange',sensor='imu')
     gs.joint_revolute('joint1','link1','link2',[0,0,2],[0,0,0],[0,0,1],[10,-1.5,1.5,1])
 
     gs.output()
