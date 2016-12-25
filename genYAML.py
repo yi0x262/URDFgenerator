@@ -17,13 +17,13 @@ class genYAML(object):
         self.joints.update(jsc)
         return 'joint_state_controller'
 
-    def revolute_joint_controller(self,jointname,pid={'p':1,'i':0,'d':0}):
+    def revolute_joint_controller(self,jointname,p=1,i=0,d=0):
         #must : use jointtype argument
         controller_name = jointname+'_position_controller'
         info = {}
         info.update({'type':'effort_controllers/JointPositionController'})
         info.update({'joint':jointname})
-        info.update({'pid':pid})#wanna this line flow_style...
+        info.update({'pid':{'p':p,'i':i,'d':d}})#wanna this line flow_style...
         rjc = {controller_name:info}
         self.joints.update(rjc)
         return controller_name

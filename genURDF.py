@@ -97,7 +97,7 @@ class genURDF(object):
         if not color is None:
             sub(gazebo,'material').text = 'Gazebo/'+color
         if not selfcollide is None:
-            sub(gazebo,'selfCollide','true')
+            sub(gazebo,'selfCollide').text='true'
         #!!!now printing...!!!#
         if sensor == 'imu':
             self.sensor_imu(refname)

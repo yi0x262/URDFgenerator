@@ -50,13 +50,16 @@ class genSIMULATION(object):
         self.generate('config','yaml',str(self.yaml))
         self.generate('launch','launch',str(self.launch))
 
-    def link_box(*args,**keys):
+    def link_box(self,*args,**keys):
     #def link_box(self,name,xyz,rpy,whd,mass,color=None,selfcollide=None,sensor=None):
+        print(args,keys)
         self.urdf.link_box(*args,**keys)
     def joint_revolute(self,name,*args):
     #def joint_revolute(self,name,parent,child,xyz,rpy,axis,limits):
         self.urdf.joint_revolute(name,*args)
         self.controller_names += self.yaml.revolute_joint_controller(name)+' '
+    def joint_fixed(self,*args):
+        self.urdf.joint_fixed(*args)
 
     def make_launch(self):
         self.launch.world(                      #http//:
@@ -70,7 +73,7 @@ class genSIMULATION(object):
         print(self.generate_path+'/urdf/'+self.robotname+'.urdf')
         self.launch.controller_spawner(self.robotname,self.controller_names)
         self.launch.robot_state_publisher(self.robotname)
-        self.launch.spawn_urdf(robotname,self.generate_path+'/urdf/'+self.robotname+'.urdf')
+        self.launch.spawn_urdf(self.robotname,self.generate_path+'/urdf/'+self.robotname+'.urdf')
 
 if __name__ == '__main__':
     robotname = 'test'
