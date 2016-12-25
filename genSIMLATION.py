@@ -50,13 +50,12 @@ class genSIMULATION(object):
         self.generate('config','yaml',str(self.yaml))
         self.generate('launch','launch',str(self.launch))
 
-    def link_box(self,name,xyz,rpy,whd,mass,color=None,selfcollide=None,sensor=None):
-        self.urdf.link_box(name,xyz,rpy,whd,mass,color,selfcollide,sensor)
-    #def link_box(*args,**keyargs):
-        #self.urdf.link_box(*args,**keyargs)
-    def joint_revolute(self,name,parent,child,xyz,rpy,axis,limits):
-        self.urdf.joint_revolute(name,parent,child,xyz,rpy,axis,limits)
-
+    def link_box(*args,**keys):
+    #def link_box(self,name,xyz,rpy,whd,mass,color=None,selfcollide=None,sensor=None):
+        self.urdf.link_box(*args,**keys)
+    def joint_revolute(self,name,*args):
+    #def joint_revolute(self,name,parent,child,xyz,rpy,axis,limits):
+        self.urdf.joint_revolute(name,*args)
         self.controller_names += self.yaml.revolute_joint_controller(name)+' '
 
     def make_launch(self):
