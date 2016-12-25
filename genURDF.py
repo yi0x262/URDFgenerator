@@ -233,6 +233,12 @@ class genURDF(object):
         joint.append(self.axis(axis))
         joint.append(self.limits_revolute(limits))
         self.robot.append(self.transmission(name))
+    def joint_fixed(self,name,parent,child):
+        #<joint name="name" type="fixed">
+        ##<parent link="parentname"/>
+        #</joint>
+        joint = sub(self.robot,'joint',name=name,type='fixed')
+        joint.extend(self.parentchild(parent,child))
 
 #output
     def gazebo_ros_control(self,robotname):
