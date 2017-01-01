@@ -42,9 +42,9 @@ class genSIMULATION(object):
         f = open(abspath+'/'+self.robotname+'.'+extension,'w')
         f.write(string)
         f.close()
-    def output(self):
+    def output(self,pkgname):
         self.controller_names = self.controller_names[:-1]# cut last space
-        self.make_launch()
+        self.make_launch(pkgname)
 
         self.generate('urdf','urdf',str(self.urdf))
         self.generate('config','yaml',str(self.yaml))
@@ -52,7 +52,7 @@ class genSIMULATION(object):
 
     def link_box(self,*args,**keys):
     #def link_box(self,name,xyz,rpy,whd,mass,color=None,selfcollide=None,sensor=None):
-        print(args,keys)
+        #print(args,keys)
         self.urdf.link_box(*args,**keys)
     def joint_revolute(self,name,*args):
     #def joint_revolute(self,name,parent,child,xyz,rpy,axis,limits):
@@ -61,10 +61,10 @@ class genSIMULATION(object):
     def joint_fixed(self,*args):
         self.urdf.joint_fixed(*args)
 
-    def make_launch(self):
-        self.launch.world(                      #http//:
+    def make_launch(self,pkgname):
+        self.launch.empty_world(                      #http//:
             #world_name  = '',                  #
-            paused      = 'false',              #start world stopped or not(default false)
+            paused      = 'true',              #start world stopped or not(default false)
             use_sim_time= 'true',               #gazebo_simulation_time syncronize ros_time or not(default true)
             gui         = 'true',               #
             headless    = 'false',              #
@@ -72,7 +72,7 @@ class genSIMULATION(object):
             )
         print(self.generate_path+'/urdf/'+self.robotname+'.urdf')
         self.launch.controller_spawner(self.robotname,self.controller_names)
-        self.launch.robot_state_publisher(self.robotname)
+        self.launch.robot_state_publisher(self.robotname,pkgname)
         self.launch.spawn_urdf(self.robotname,self.generate_path+'/urdf/'+self.robotname+'.urdf')
 
 if __name__ == '__main__':

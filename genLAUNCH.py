@@ -34,15 +34,15 @@ class genLAUNCH(object):
     def spawn_urdf(self,robotname,urdfpath):
         self.launch.append(self.node('spawn_urdf','gazebo_ros','spawn_model',args='-file {} -urdf -model {}'.format(urdfpath,robotname)))
 
-    def world(self,**args):
+    def empty_world(self,**args):
         include = element('include',file='$(find gazebo_ros)/launch/empty_world.launch')
         for i,j in args.items():
             sub(include, 'arg', name=i, value=j)
         self.launch.append(include)
-    def robot_state_publisher(self,robotname):
-        sub(self.launch,'arg',name='model',default='$(find {})/urdf/{}.urdf'.format('test_gazebo',robotname))
+    def robot_state_publisher(self,robotname,pkgname):
+        sub(self.launch,'arg',name='model',default='$(find {})/urdf/{}.urdf'.format(pkgname,robotname))
         sub(self.launch,'param',name='robot_description',textfile='$(arg model)')
-        sub(self.launch,'rosparam',file='$(find {})/config/{}.yaml'.format('test_gazebo',robotname),command='load')#very important
+        sub(self.launch,'rosparam',file='$(find {})/config/{}.yaml'.format(pkgname,robotname),command='load')#very important
 
         jsp = self.node('joint_state_publisher','joint_state_publisher','joint_state_publisher')
         rsp = self.node('robot_state_publisher','robot_state_publisher','robot_state_publisher',respawn='false',output='screen')
@@ -64,7 +64,8 @@ if __name__ == '__main__':
             headless    = 'false',              #
             debug       = 'false'               #
             )
-    c.spawn_urdf(robotname,'/home/yihome/')
+    import os
+    c.spawn_urdf(robotname,os.getcwd())
     c.controller_spawner(robotname,'args args2 joint_state_controller')
     c.robot_state_publisher(robotname)
     print(c)

@@ -1,12 +1,12 @@
 #!/usr/env/bin python3
 from genSIMULATION import genSIMULATION
 
-import sys
-gs = genSIMULATION('khr3',sys.argv[1])
+import os
+gs = genSIMULATION('khr3',os.getcwd())
 
 def arm(name,xyz,whd,mass,color,*options,rpy=(0,0,0)):
     keys = dict()
-    print(options)
+    #print(options)
     opts = set(options)
     #selfcollide
     if 'selfcollide' in opts:
@@ -15,8 +15,10 @@ def arm(name,xyz,whd,mass,color,*options,rpy=(0,0,0)):
         keys['sensors'] = 'imu'
     return name,xyz,rpy,whd,mass,color,keys
 
+def rl(p,RorL):
+    return [RorL*p[0],*p[1:]]
 def changeRorL(profile,RorL):
-    return [profile[0],[RorL*p for p in profile[1]],*profile[2:-3],[RorL*p for p in profile[-3]],*profile[-2:]]
+    return [rl(profile[0],RorL),*profile[1:-4],rl(profile[-4],RorL),*profile[-3:]]
 
 def arms(baselink,name,profile,RorL):
     """
@@ -27,7 +29,7 @@ def arms(baselink,name,profile,RorL):
 
     for i,p in enumerate(profile):
         gs.link_box(*arm(linknames[i+1],*p[:-4]))
-        print(*linknames[i:i+2],*p[-4:])
+        #print(*linknames[i:i+2],*p[-4:])
         gs.joint_revolute(name+'r'+str(i),*linknames[i:i+2],*p[-4:])
 
 
@@ -69,4 +71,4 @@ legs_profile = [((0,0,-0.015),(0.02,0.05,0.03),0.015,'White',(0.023,0.01,-0.02),
 arms('weist','Rleg',legs_profile,-1)
 arms('weist','Lleg',legs_profile,1)
 
-gs.output()
+gs.output(os.getcwd().split('/')[-1])
