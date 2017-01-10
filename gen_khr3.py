@@ -2,7 +2,7 @@
 from genSIMULATION import genSIMULATION
 
 import os
-gs = genSIMULATION('khr3',os.getcwd())
+gs = genSIMULATION('khr3',os.getcwd(),pid=(1,0.01,0.1))
 
 def arm(name,xyz,whd,mass,color,*options,rpy=(0,0,0)):
     keys = dict()

@@ -17,7 +17,7 @@ class genYAML(object):
         self.joints.update(jsc)
         return 'joint_state_controller'
 
-    def revolute_joint_controller(self,jointname,p=1,i=0,d=0):
+    def revolute_joint_controller(self,jointname,pid=(1,0,0)):
         #must : use jointtype argument
         controller_name = jointname+'_position_controller'
         info = {}

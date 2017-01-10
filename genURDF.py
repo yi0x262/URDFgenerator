@@ -15,10 +15,11 @@ def exBrackets(brackets):
 
 class genURDF(object):
     zero = (0,0,0)
-    def __init__(self,robotname):
+    def __init__(self,robotname,ros_control=True):
         #robot init
         self.robot = element('robot',name=robotname)
-        self.robot.append(self.gazebo_ros_control(robotname))#MUST write FIRST!!
+        if ros_control:
+            self.robot.append(self.gazebo_ros_control(robotname))#MUST write FIRST!!
 #frequency tags
     def origin(self,xyz,rpy):
         return element('origin',xyz=exBrackets(xyz),rpy=exBrackets(rpy))
@@ -140,7 +141,7 @@ class genURDF(object):
         sub(plugin,'bodyName').text=bodyname
         sub(plugin,'serviceName').text=bodyname+'/imu_service'
         sub(plugin,'frameName').text=bodyname+'_imuframe'
-        sub(plugin,'updateRate').text='10.0'
+        sub(plugin,'updateRate').text='100.0'
         sub(plugin,'gaussianNoise').text='0.0'
         #sub(plugin,'xyzOffset').text='0,0,0'
         #sub(plugin,'rpyOffset').text='0,0,0'
@@ -259,7 +260,7 @@ class genSimulation(object):
 
 if __name__ == '__main__':
     robotname = 'test'
-    gu = genURDF(robotname)
+    gu = genURDF(robotname,ros_control=False)
     gu.link_box('link1',[0,0,1],[0,0,0],[1,1,1],10,'White')
     gu.link_box('link2',[0,0,1.5],[0,0,0],[1,1,1],10,'Orange')#,sensor='imu')
     gu.joint_revolute('joint1','link1','link2',[0,0,2],[0,0,0],[0,0,1],[10,-1.5,1.5,1])

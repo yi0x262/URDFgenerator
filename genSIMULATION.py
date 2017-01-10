@@ -20,7 +20,7 @@ from genYAML import genYAML
 from genLAUNCH import genLAUNCH
 
 class genSIMULATION(object):
-    def __init__(self,robotname,path):
+    def __init__(self,robotname,path,pid=None,publish_rate=100):
         self.robotname = robotname#?
         self.urdf = genURDF(robotname)
         self.yaml = genYAML(robotname)
@@ -28,8 +28,10 @@ class genSIMULATION(object):
 
         self.controller_names = str()
         self.generate_path = path
+        if pid is not None:
+            self.pid = pid
 
-        self.controller_names += self.yaml.joint_state_controller(50)+' '
+        self.controller_names += self.yaml.joint_state_controller(publish_rate)+' '
 
 
     def generate(self,dirname,extension,string):
@@ -54,10 +56,11 @@ class genSIMULATION(object):
     #def link_box(self,name,xyz,rpy,whd,mass,color=None,selfcollide=None,sensor=None):
         #print(args,keys)
         self.urdf.link_box(*args,**keys)
-    def joint_revolute(self,name,*args):
+    def joint_revolute(self,name,*args,pid=(1,0,0)):
     #def joint_revolute(self,name,parent,child,xyz,rpy,axis,limits):
+        _pid = self.pid if hasattr(self,'pid') else pid
         self.urdf.joint_revolute(name,*args)
-        self.controller_names += self.yaml.revolute_joint_controller(name)+' '
+        self.controller_names += self.yaml.revolute_joint_controller(name,pid=_pid)+' '
     def joint_fixed(self,*args):
         self.urdf.joint_fixed(*args)
 
