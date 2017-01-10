@@ -23,7 +23,7 @@ class genYAML(object):
         info = {}
         info.update({'type':'effort_controllers/JointPositionController'})
         info.update({'joint':jointname})
-        info.update({'pid':{'p':p,'i':i,'d':d}})#wanna this line flow_style...
+        info.update({'pid':{'p':pid[0],'i':pid[1],'d':pid[2]}})#wanna this line flow_style...
         rjc = {controller_name:info}
         self.joints.update(rjc)
         return controller_name
